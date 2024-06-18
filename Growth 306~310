@@ -1,0 +1,85 @@
+Clear["*"]
+DeGradient[x_, X_, cc_, CC_, a_, b_] := Module[{h, H, F, rule}, {
+   h = Simplify[Sqrt@Total[#^2 & /@ D[x, #]], 
+       cc \[Element] PositiveReals] & /@ cc;
+   H = Simplify[Sqrt@Total[#^2 & /@ D[X, #]], 
+       CC \[Element] PositiveReals] & /@ CC;
+   rule = MapThread[#1 -> #2 &, {cc, a}];
+   F = TensorProduct[h, 1/H]*Grad[a, b];
+   F /. rule // Simplify // MatrixForm}]
+
+
+xx0 = First@(Table[\[Lambda][i, j], {i, 1, 3}, {j, 1, 3}] . {XX, YY, 
+      ZZ});
+yy0 = Part[(Table[\[Lambda][i, j], {i, 1, 3}, {j, 1, 3}] . {XX, YY, 
+      ZZ}), 2];
+zz0 = Part[(Table[\[Lambda][i, j], {i, 1, 3}, {j, 1, 3}] . {XX, YY, 
+      ZZ}), 3];
+CC = {XX, YY, ZZ};
+X = {XX, YY, ZZ };
+cc = {xx, yy, zz};
+x = {xx, yy, zz};
+a = {xx0, yy0, zz0};
+b = {XX, YY, ZZ};
+Grad[a, b]
+DeGradient[x, X, cc, CC, a, b][[1]]
+
+
+
+CC = {XX, YY, ZZ};
+X = {XX, YY, ZZ };
+cc = {r, \[Theta], z};
+x = {r Cos[\[Theta]], r Sin[\[Theta]], z};
+a = {Sqrt[2 a0 XX], b0 YY, ZZ/(a0 b0) - b0 c0 YY};
+b = {XX, YY, ZZ};
+DeGradient[x, X, cc, CC, a, b][[1]]
+
+
+
+CC = {R, \[CapitalTheta], Z};
+X = {R Cos[\[CapitalTheta]], R Sin[\[CapitalTheta]], Z};
+cc = {xx, yy, zz};
+x = cc;
+a = {(a0 b0^2 R^2)/2, \[CapitalTheta]/(a0 b0), 
+   Z/b0 - c0 \[CapitalTheta]/(a0 b0)};
+b = CC;
+DeGradient[x, X, cc, CC, a, b][[1]]
+
+
+
+CC = {R, \[CapitalTheta], Z};
+X = {R Cos[\[CapitalTheta]], R Sin[\[CapitalTheta]], Z};
+cc = {r, \[Theta], z};
+x = {r Cos[\[Theta]], r Sin[\[Theta]], z};
+(*a*cf-de=1*)
+a = {Sqrt[a0 R^2 + b0], c0 \[CapitalTheta] + d0 Z, 
+   e0 \[CapitalTheta] + f0 Z};
+b = CC;
+DeGradient[x, X, cc, CC, a, b][[1]]
+
+
+
+
+CC = {R, \[CapitalTheta], Z};
+X = {R Cos[\[CapitalTheta]], R Sin[\[CapitalTheta]], Z};
+cc = {r, \[Theta], z};
+x = {r Cos[\[Theta]], r Sin[\[Theta]], z};
+(*a*cf-de=1*)
+a = {a0 R, c0*\[CapitalTheta] + d0*Log[b0 R], e0 Z};
+b = CC;
+rule = MapThread[#1 -> #2 &, {cc, a}];
+DeGradient[x, X, cc, CC, a, b][[1]]
+
+
+
+CC = {R, \[CapitalTheta], \[CapitalPhi]};
+X = {R Cos[\[CapitalTheta]] Sin[\[CapitalPhi]], 
+   R Sin[\[CapitalTheta]] Sin[\[CapitalPhi]], R Cos[\[CapitalPhi]] };
+cc = {r, \[Theta], \[Phi]};
+x = {r Cos[\[Theta]] Sin[\[Phi]], r Sin[\[Theta]] Sin[\[Phi]], 
+   r Cos[\[Phi]]};
+(*a*cf-de=1*)
+a = {(R^3 + a0)^(1/3), \[CapitalTheta], \[CapitalPhi]};
+b = CC;
+rule = MapThread[#1 -> #2 &, {cc, a}];
+DeGradient[x, X, cc, CC, a, b][[1]]
